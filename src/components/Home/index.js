@@ -1,8 +1,20 @@
 // ./src/components/Home/index.js
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+
+import CommentContext from "./../../context/Comments/CommentContext"
 
 export default function Home() {
+
+	// ESTADO GLOBAL
+	const ctxComments = useContext(CommentContext)
+
+	const {
+		comments,
+		getAllComments,
+		createComment
+	} = ctxComments
+
 
 	// ESTADO LOCAL
 	const [data, setData] = useState({
@@ -10,9 +22,12 @@ export default function Home() {
 		description: ""
 	})
 
-	const [comments, setComments ] = useState([])
-
 	const [error, setError] = useState("")
+
+	// useEffect se ejecuta después del primer return
+	useEffect(() => {
+		getAllComments()
+	}, []) // EL ARREGLO VACÍO SIGNIFICA QUE SOLO SE VA A EJECUTAR UNA VEZ
 
 
 	const handleChange = (event) => {
@@ -41,10 +56,7 @@ export default function Home() {
 
 
 		// ACTUALIZACIÓN DE DATOS
-		setComments([
-			...comments,
-			data			
-		])
+		createComment(data)
 
 		// data se vuelva a datos vacíos
 		setData({
